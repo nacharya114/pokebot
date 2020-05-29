@@ -1,0 +1,2 @@
+poke-env==0.3.4
+keras-rl2==1.0.3
