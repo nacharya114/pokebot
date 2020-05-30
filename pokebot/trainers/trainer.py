@@ -14,7 +14,7 @@ from rl.memory import SequentialMemory
 from rl.policy import LinearAnnealedPolicy, EpsGreedyQPolicy
 from tensorflow.keras.optimizers import Adam
 
-from .utils import dqn_evaluation, dqn_training
+from .utils import dqn_evaluation, dqn_training, play_against_human
 from ..models.dqn import Model
 from ..bots.bot import BotPlayer
 
@@ -45,6 +45,12 @@ class Trainer(ABC):
     def load_agent_from_file(self, fp):
         self.agent.load_weights(fp)
 
+    async def battle_human(self, opponent: str):
+
+        play_against_human(self.player,
+                           opponent=opponent,
+                           env_algorithm=dqn_evaluation,
+                           env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 1})
 
 class SimpleDQNTrainer(Trainer):
 
@@ -88,3 +94,4 @@ class SimpleDQNTrainer(Trainer):
                 opponent=p,
                 env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100},
             )
+
