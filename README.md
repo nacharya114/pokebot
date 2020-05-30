@@ -7,12 +7,17 @@ We wil also be using a specific fork of the Pokemon Showdown Simulator, since th
 
 ## Installation
 
-`pip install -r requirements.txt`
-
-<b> Note that this is not set up as a python package as of yet, so non-module imports will be necessary. </b>
+```
+git clone https://github.com/nacharya114/pokebot.git
+cd pokebot
+pip install -r requirements.txt
+pip install -e .
+```
 
 ## Resources
 
 - [Showdown Simulator Fork](https://github.com/hsahovic/pokemon-showdown)
 - [PokeEnv](https://github.com/hsahovic/poke-env)
 
+## Branch To Do's:
+- Create a logger

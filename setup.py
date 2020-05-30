@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pokebot-nacharya114", # Replace with your own username
+    name="pokebot", # Replace with your own username
     version="0.0.1",
     author="Neil Acharya, Leo Medrano, Colin",
     author_email="nacharya114@gmail.com",
