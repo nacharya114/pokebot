@@ -2,7 +2,7 @@
     "policy": {
         "attr": "eps",
         "value_max": 1.0,
-        "value_min": 0.5,
+        "value_min": 0.2,
         "value_test": 0,
         "nb_steps": 10000
     }, 
