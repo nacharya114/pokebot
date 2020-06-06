@@ -13,7 +13,7 @@ from poke_env.environment.side_condition import SideCondition
 
 class StateEngine(ABC):
 
-    def __init__(self, shape):
+    def __init__(self, shape, **kwargs):
         super().__init__()
 
         self.shape = shape
@@ -73,8 +73,8 @@ class HeuristicStateEngine(StateEngine):
     HP_FRACTION_COEFICIENT = 0.4
     SWITCH_OUT_MATCHUP_THRESHOLD = -2
 
-    def __init__(self):
-        super().__init__(22)
+    def __init__(self, **kwargs):
+        super().__init__(24, **kwargs)
 
     def _estimate_matchup(self, mon, opponent):
         score = max([opponent.damage_multiplier(t) for t in mon.types if t is not None])
@@ -161,16 +161,19 @@ class HeuristicStateEngine(StateEngine):
 
         can_dynamax = 1 if battle.can_dynamax else 0
 
-        return np.concatenate([moves_sum,
-                              moves_boost,
-                              move_haz,
-                              move_anti,
-                              [battle_sc,
-                              battle_o_sc],
-                              [remaining_mon_opponent,
-                              remaining_mon_team],
-                              [active_matchup,
-                              can_dynamax]
-                               ])
+        return np.concatenate([
+                            [def_ratio,
+                            spd_ratio],
+                            moves_sum,
+                            moves_boost,
+                            move_haz,
+                            move_anti,
+                            [battle_sc,
+                            battle_o_sc],
+                            [remaining_mon_opponent,
+                            remaining_mon_team],
+                            [active_matchup,
+                            can_dynamax]
+                            ])
 
 

@@ -9,7 +9,8 @@ from tensorflow.keras.models import Sequential
 
 from ..bots.bot import BotPlayer
 
-class Model():
+
+class DQNModel:
 
     def __init__(self, player: BotPlayer):
         self.player = player
