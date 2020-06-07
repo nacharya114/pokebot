@@ -31,4 +31,6 @@ This repo has 3 different modules: `bot`, `model`, and `trainer`
 - [PokeEnv](https://github.com/hsahovic/poke-env)
 
 ## Branch To Do's:
-- Create a logger
+- [ ] Create a logger
+- [X] Create a training script for background running
+- [X] Create State Representation for a more sophisticated model
