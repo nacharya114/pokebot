@@ -19,7 +19,7 @@ class DQNModel:
 
     def setup_model_layers(self):
         self.model = Sequential()
-        self.model.add(Dense(128, activation="elu", input_shape=(1, self.player.state_engine.shape,)))
+        self.model.add(Dense(64, activation="elu", input_shape=(1, self.player.state_engine.shape,)))
 
         # Our embedding have shape (1, 10), which affects our hidden layer dimension and output dimension
         # Flattening resolve potential issues that would arise otherwise
