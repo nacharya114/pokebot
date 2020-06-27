@@ -10,15 +10,20 @@ from typing import Callable
 from poke_env.player.env_player import EnvPlayer
 from poke_env.player.player import Player
 
+import wandb
+from wandb.keras import WandbCallback
+wandb.init(project="pokebot")
+
 
 
 def dqn_training(player, dqn, nb_steps):
-    dqn.fit(player, nb_steps=nb_steps)
+    dqn.fit(player, nb_steps=nb_steps, callbacks=[WandbCallback(log_weights=True)])
 
     # This call will finished eventual unfinshed battles before returning
     player.complete_current_battle()
 
-def dqn_evaluation(player, dqn, nb_episodes):
+
+def dqn_evaluation(player: Player, dqn, nb_episodes, logger=None):
     # Reset battle statistics
     player.reset_battles()
     dqn.test(player, nb_episodes=nb_episodes, visualize=False, verbose=False)
@@ -27,6 +32,10 @@ def dqn_evaluation(player, dqn, nb_episodes):
         "DQN Evaluation: %d victories out of %d episodes"
         % (player.n_won_battles, nb_episodes)
     )
+
+    score = player.n_won_battles / nb_episodes
+    if logger:
+        logger({"player": player.username,"score": score})
 
 def play_against_human(
        player, env_algorithm: Callable, opponent: str, env_algorithm_kwargs=None

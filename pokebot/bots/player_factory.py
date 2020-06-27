@@ -7,7 +7,7 @@ class PlayerFactory:
     @staticmethod
     def get_player(type="", format="gen8randombattle", **kwargs):
         baselines = importlib.import_module("poke_env.player.baselines")
-        if getattr(baselines, type, lambda: None):
+        if hasattr(baselines, type):
             clazz = getattr(baselines, type)
             return clazz(battle_format=format)
 

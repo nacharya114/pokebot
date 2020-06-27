@@ -5,6 +5,7 @@
 ##########################
 from abc import ABC
 from typing import Optional, List
+from wandb import log
 
 import poke_env
 from poke_env.player.random_player import RandomPlayer
@@ -78,7 +79,7 @@ class SimpleDQNTrainer(Trainer):
             **agent_dict
         )
 
-        self.agent.compile(Adam(lr=0.00025), metrics=["mae"])
+        self.agent.compile(Adam(lr=0.0003), metrics=["mse"])
 
     async def train(self, opponent: Optional[Player] = None, nb_steps=None):
 
@@ -102,5 +103,5 @@ class SimpleDQNTrainer(Trainer):
             self.player.play_against(
                 env_algorithm=dqn_evaluation,
                 opponent=p,
-                env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100},
+                env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100, "logger": log},
             )
