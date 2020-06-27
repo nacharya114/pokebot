@@ -6,6 +6,7 @@
 from abc import ABC
 from typing import Optional, List
 
+import poke_env
 from poke_env.player.random_player import RandomPlayer
 from poke_env.player.player import Player
 
@@ -15,13 +16,14 @@ from rl.policy import LinearAnnealedPolicy, EpsGreedyQPolicy
 from tensorflow.keras.optimizers import Adam
 
 from .utils import dqn_evaluation, dqn_training, play_against_human
-from ..models.dqn import Model
+from ..bots.player_factory import PlayerFactory
+from ..models.dqn import DQNModel
 from ..bots.bot import BotPlayer
 
 
 class Trainer(ABC):
-    
-    def __init__(self, player: BotPlayer, model: Model, policy_dict: dict, agent_dict: dict):
+
+    def __init__(self, player: BotPlayer, model: DQNModel, policy_dict: dict, agent_dict: dict, **kwargs):
         super().__init__()
 
         self.player = player
@@ -46,16 +48,20 @@ class Trainer(ABC):
         self.agent.load_weights(fp)
 
     async def battle_human(self, opponent: str):
-
         play_against_human(self.player,
                            opponent=opponent,
                            env_algorithm=dqn_evaluation,
                            env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 1})
 
+
 class SimpleDQNTrainer(Trainer):
 
-    def __init__(self, player, model, policy_dict, agent_dict):
-        super().__init__(player, model, policy_dict, agent_dict)
+    def __init__(self, player, model, policy_dict, agent_dict, opponent=RandomPlayer(battle_format="gen8randombattle"),
+                 nbsteps=100000, **kwargs):
+        super().__init__(player, model, policy_dict, agent_dict, **kwargs)
+
+        self.opponent = opponent if isinstance(opponent, Player) else PlayerFactory.get_player(**opponent)
+        self.nbsteps = nbsteps
 
     def init_policy(self, policy_dict):
         self.policy = LinearAnnealedPolicy(
@@ -64,7 +70,6 @@ class SimpleDQNTrainer(Trainer):
         )
 
     def init_agent(self, agent_dict):
-
         self.agent = DQNAgent(
             model=self.model.model,
             policy=self.policy,
@@ -75,17 +80,22 @@ class SimpleDQNTrainer(Trainer):
 
         self.agent.compile(Adam(lr=0.00025), metrics=["mae"])
 
-    async def train(self, opponent: Optional[Player] = RandomPlayer(battle_format="gen8randombattle")):
+    async def train(self, opponent: Optional[Player] = None, nb_steps=None):
+
+        if not opponent:
+            opponent = self.opponent
+
+        if not nb_steps:
+            nb_steps = self.nbsteps
 
         # Training
         self.player.play_against(
             env_algorithm=dqn_training,
             opponent=opponent,
-            env_algorithm_kwargs={"dqn": self.agent, "nb_steps": 100000},
+            env_algorithm_kwargs={"dqn": self.agent, "nb_steps": nb_steps},
         )
 
     async def evaluate(self, playerList: List[Player]):
-
         for p in playerList:
             # Evaluation
             print(f"Results against player: {p.username}")
@@ -94,4 +104,3 @@ class SimpleDQNTrainer(Trainer):
                 opponent=p,
                 env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100},
             )
-
