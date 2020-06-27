@@ -23,11 +23,11 @@ def calcDamage(activePokemon,oppActivePokemon, moveUsed)
 	activeMonStats = activePokemon.stats
 	oppActiveMonStats = oppActivePokemon.stats
 
-	if moveCategory == MoveCategory.PHYSICAL
+	if moveCategory == MoveCategory.PHYSICAL:
 		A = activeMonStats["Atk"];
 		D = oppActiveMonStats["Def"]
 		
-	elif moveCategory == MoveCategory.SPECIAL
+	elif moveCategory == MoveCategory.SPECIAL:
 		A = activeMonStats["SpA"];
 		D = oppActiveMonStats["SpD"]
 		
