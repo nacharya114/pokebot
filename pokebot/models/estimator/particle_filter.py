@@ -10,19 +10,21 @@ import random
 
 from damage_formula import *
 
+from statFormulas import *
+
 class ParticleFilter:
 
     
     ##########################
     # Constructor
     ##########################
-    def __init__(self,X0,M):
+    def __init__(self,M, pokemon):
         self.Xt_prev = X0 #a distribution representing prior knowledge of the enemy Mon's stats
         self.M = M #the number of particles in the filter
         self.weights = np.zeros((M,1))
         self.Xt = X0
         self.Xt_bar = np.zeros((M,12))
-        self.statsEstMatrix = self.Xt[:,0:5] + np.floor[self.Xt[:,6:11] /4];
+        self.statsMatrix = self.Xt[:,0:5] + np.floor[self.Xt[:,6:11] /4];
 
     ##########################
     # Estimate functions
@@ -233,15 +235,27 @@ def generateInitialDistribution(M,pokemon):
 
     # for now prespecify the pokemon: excadrill
 
+    # name = pokemon.species
+    name = 'Excadrill'
+
+    df = loadDatabase(filepath = '../../../resources/pokemon.csv')
+    baseStats = extractBaseStats(name, df)
+
+    HP_BaseRange = [calcHPStat(pokemon, baseStats[0], 0, 0),calcHPStat(pokemon, baseStats[0], 31, 255)]
+    Atk_BaseRange = [calcStat(pokemon,baseStats[1], 0,0, 0.9),calcStat(pokemon,baseStats[1], 31,255, 1.1)]
+    Def_BaseRange = [calcStat(pokemon,baseStats[2], 0,0, 0.9),calcStat(pokemon,baseStats[2], 31,255, 1.1)]
+    SpA_BaseRange = [calcStat(pokemon,baseStats[3], 0,0, 0.9),calcStat(pokemon,baseStats[3], 31,255, 1.1)]
+    SpD_BaseRange = [calcStat(pokemon,baseStats[4], 0,0, 0.9),calcStat(pokemon,baseStats[4], 31,255, 1.1)]
+    Spe_BaseRange = [calcStat(pokemon,baseStats[5], 0,0, 0.9),calcStat(pokemon,baseStats[5], 31,255, 1.1)]
 
 
-    X0 = [round(diff(pokemon.HP_BaseRange) * rand(M,1) + pokemon.HP_BaseRange(1)),...
-        round(diff(pokemon.Atk_BaseRange) * rand(M,1) + pokemon.Atk_BaseRange(1)),...
-        round(diff(pokemon.Def_BaseRange) * rand(M,1) + pokemon.Def_BaseRange(1)),...
-        round(diff(pokemon.SpA_BaseRange) * rand(M,1) + pokemon.SpA_BaseRange(1)),...
-        round(diff(pokemon.SpD_BaseRange) * rand(M,1) + pokemon.SpD_BaseRange(1)),...
-        round(diff(pokemon.Spe_BaseRange) * rand(M,1) + pokemon.Spe_BaseRange(1)),...
-        ];
+    X0 = np.concatenate(( np.round( (HP_BaseRange[1] - HP_BaseRange[0]) * np.random.rand(M,1)  + HP_BaseRange[1]), \
+        np.round( (Atk_BaseRange[1] - Atk_BaseRange[0]) * np.random.rand(M,1)  + Atk_BaseRange[1]), \
+        np.round( (Def_BaseRange[1] - Def_BaseRange[0]) * np.random.rand(M,1)  + Def_BaseRange[1]), \
+        np.round( (SpA_BaseRange[1] - SpA_BaseRange[0]) * np.random.rand(M,1)  + SpA_BaseRange[1]), \
+        np.round( (SpD_BaseRange[1] - SpD_BaseRange[0]) * np.random.rand(M,1)  + SpD_BaseRange[1]), \
+        np.round( (Spe_BaseRange[1] - Spe_BaseRange[0]) * np.random.rand(M,1)  + Spe_BaseRange[1]) \
+        ),axis=1)
 
 
 
@@ -255,10 +269,9 @@ def generateInitialDistribution(M,pokemon):
 
     [rows,cols] = size(EV_distr_matrix)
 
-    while rows < M
+    while rows < M:
         EV_distr_matrix = [EV_distr_matrix;EVs_setWise(1,:)];
         [rows,cols] = size(EV_distr_matrix)
-    end
 
     #randomize
 
