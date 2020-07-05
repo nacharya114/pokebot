@@ -10,6 +10,9 @@ from poke_env.environment.battle import Battle
 from poke_env.environment.move_category import MoveCategory
 from poke_env.environment.side_condition import SideCondition
 
+from pokebot.models.estimator.estimator import PokemonEstimator
+from pokebot.models.estimator.particle_filter import ParticleFilter
+
 
 class StateEngine(ABC):
 
@@ -177,3 +180,63 @@ class HeuristicStateEngine(StateEngine):
                             ])
 
 
+class PFStateEngine(StateEngine):
+    """
+    State Engine Class that implements PArticle Filter Estimation for fully expressive state space.
+
+    The state space will include:
+        - Stats for all pkmn, self and enemy (12 * 6 = 72)
+        - Boolean for isActive (12)
+        - HP Remaining for each (12)
+        - Active Moves for mon in play, which include (4):
+            - Damage Estimate against opponent active mon
+            - TODO Ignore stat boosts and entry hazards for now
+        - Move Score for each pokemon on our team which include (5):
+            -  Aggregate Move Score based on damage (estimation)
+
+    Total State Space size = 72 + 12 + 12 + 4 + 5 = 105
+    """
+
+
+    def __init__(self):
+
+        super().__init__(105)
+
+        self.pfs = {}
+
+
+    def convert(self, battle: Battle):
+
+        state = []
+
+        # Main mons shortcuts
+        active = battle.active_pokemon
+        opponent = battle.opponent_active_pokemon
+
+        # Initialize stat estimate values
+        self_pkmn = np.zeros(6*6)  # TODO Add real stat values here
+        if len(self.pfs) == 0:
+            self.pfs = {k: PokemonEstimator(k) for k in battle.opponent_team.values()}
+        else:
+            pass
+            # TODO: Leo, update PF values here
+        opp_pkmn = [p.estimate() for p in self.pfs.values()]
+
+        # is Active Booleans
+        self_isActive = np.zeros(6)
+        opp_isActive = np.zeros(6)
+
+        # Remaining hp
+        self_hp_remaining = np.ones(6)
+        opp_hp_remaining = np.ones(6)
+
+        # Active moves
+        # TODO Implement Damage calc based on stat estimate
+
+        # Move Scores
+        # TODO Implement Aggregate Move scores
+
+        # return concatenated state
+
+
+        pass
