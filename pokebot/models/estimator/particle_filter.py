@@ -232,9 +232,9 @@ def generateInitialDistribution(M,pokemon):
     # generate initial stat distribution from a set lookup on smogon
 
     # for now prespecify the pokemon: excadrill
-    
 
-    
+
+
     X0 = [round(diff(pokemon.HP_BaseRange) * rand(M,1) + pokemon.HP_BaseRange(1)),...
         round(diff(pokemon.Atk_BaseRange) * rand(M,1) + pokemon.Atk_BaseRange(1)),...
         round(diff(pokemon.Def_BaseRange) * rand(M,1) + pokemon.Def_BaseRange(1)),...
@@ -265,6 +265,7 @@ def generateInitialDistribution(M,pokemon):
     EV_distr_matrix = EV_distr_matrix(randperm(M),:)
 
     X0 = [X0,EV_distr_matrix];
+
 
 
 
