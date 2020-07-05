@@ -9,7 +9,7 @@ from poke_env.environment.move import Move
 from poke_env.environment.move_category import MoveCategory
 from poke_env.environment.pokemon_type import PokemonType
 
-def calcDamage(activePokemon,oppActivePokemon, moveUsed)
+def calcDamage(activePokemon,oppActivePokemon, moveUsed):
 
 
 	activeMonTypes = activePokemon.types
@@ -63,7 +63,7 @@ def calcDamage(activePokemon,oppActivePokemon, moveUsed)
 
 
 
-def calcDamage_model(activePokemon,oppActivePokemon, A,D, moveUsed)
+def calcDamage_model(activePokemon,oppActivePokemon, A,D, moveUsed):
 
 
 	activeMonTypes = activePokemon.types

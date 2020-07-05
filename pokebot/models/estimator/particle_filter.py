@@ -227,8 +227,44 @@ class ParticleFilter:
 
 
 
+def generateInitialDistribution(M,pokemon):
+
+    # generate initial stat distribution from a set lookup on smogon
+
+    # for now prespecify the pokemon: excadrill
+    
+
+    
+    X0 = [round(diff(pokemon.HP_BaseRange) * rand(M,1) + pokemon.HP_BaseRange(1)),...
+        round(diff(pokemon.Atk_BaseRange) * rand(M,1) + pokemon.Atk_BaseRange(1)),...
+        round(diff(pokemon.Def_BaseRange) * rand(M,1) + pokemon.Def_BaseRange(1)),...
+        round(diff(pokemon.SpA_BaseRange) * rand(M,1) + pokemon.SpA_BaseRange(1)),...
+        round(diff(pokemon.SpD_BaseRange) * rand(M,1) + pokemon.SpD_BaseRange(1)),...
+        round(diff(pokemon.Spe_BaseRange) * rand(M,1) + pokemon.Spe_BaseRange(1)),...
+        ];
 
 
+
+
+    #extract the EVs for each distinct set
+    #each row denotes a specific set's EVs
+    EVs_setWise = [[4, 252, 0, 0, 0, 252];[0,252,4,0,0,252]];
+
+    [rows1,cols1] = size(EVs_setWise)
+    EV_distr_matrix = repmat(EVs_setWise,floor(M/rows1),1)
+
+    [rows,cols] = size(EV_distr_matrix)
+
+    while rows < M
+        EV_distr_matrix = [EV_distr_matrix;EVs_setWise(1,:)];
+        [rows,cols] = size(EV_distr_matrix)
+    end
+
+    #randomize
+
+    EV_distr_matrix = EV_distr_matrix(randperm(M),:)
+
+    X0 = [X0,EV_distr_matrix];
 
 
 
