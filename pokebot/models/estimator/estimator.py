@@ -24,27 +24,27 @@ class PokemonEstimator():
 
     @property
     def hp(self):
-        return np.mean(self.pf.statsEstMatrix[:, 0])
+        return np.mean(self.pf.statsMatrix[:, 0])
 
     @property
     def atk(self):
-        return np.mean(self.pf.statsEstMatrix[:, 1])
+        return np.mean(self.pf.statsMatrix[:, 1])
 
     @property
     def defense(self):
-        return np.mean(self.pf.statsEstMatrix[:, 2])
+        return np.mean(self.pf.statsMatrix[:, 2])
 
     @property
     def spatk(self):
-        return np.mean(self.pf.statsEstMatrix[:, 3])
+        return np.mean(self.pf.statsMatrix[:, 3])
 
     @property
     def spdef(self):
-        return np.mean(self.pf.statsEstMatrix[:, 4])
+        return np.mean(self.pf.statsMatrix[:, 4])
 
     @property
     def speed(self):
-        return np.mean(self.pf.statsEstMatrix[:, 5])
+        return np.mean(self.pf.statsMatrix[:, 5])
 
 
     def estimate(self):

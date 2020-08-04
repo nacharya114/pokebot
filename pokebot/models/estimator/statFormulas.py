@@ -23,7 +23,7 @@ def calcStat(pokemon,baseStat, IV,EV, natureMod):
 
 
 
-def extractBaseStats(pokemon, database):
+def extractBaseStats(pokemon, df):
 
 	
 	# print(df.head(5))
@@ -31,11 +31,11 @@ def extractBaseStats(pokemon, database):
 	print(pokemonEntry)
 	# print(pokemonEntry['hp'].iloc[0])
 	# print(pokemonEntry['attack'].iloc[0])
-	stats = [pokemonEntry['hp'].iloc[0],\
-		pokemonEntry['attack'].iloc[0],\
-		pokemonEntry['defense'].iloc[0],\
-		pokemonEntry['sp_attack'].iloc[0],\
-		pokemonEntry['sp_defense'].iloc[0],\
+	stats = [pokemonEntry['hp'].iloc[0],
+		pokemonEntry['attack'].iloc[0],
+		pokemonEntry['defense'].iloc[0],
+		pokemonEntry['sp_attack'].iloc[0],
+		pokemonEntry['sp_defense'].iloc[0],
 		pokemonEntry['speed'].iloc[0]]
 	print(stats)
 	return stats

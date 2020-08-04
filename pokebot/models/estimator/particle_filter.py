@@ -29,8 +29,8 @@ class ParticleFilter:
         self.weights = np.zeros((M,1))
         self.Xt = self.X0
         self.Xt_bar = np.zeros((M,6))
-        # self.statsMatrix = self.Xt[:,0:5] + np.floor[self.Xt[:,6:11] /4]
-        self.statsMatrix = self.Xt[:,0:5]
+        # self.statsMatrix = self.Xt[:,0:6] + np.floor[self.Xt[:,6:11] /4]
+        self.statsMatrix = self.Xt[:, 0:6]
 
     ##########################
     # Estimate functions
@@ -43,12 +43,12 @@ class ParticleFilter:
         activeMonStats = activePokemon.stats
 
         for m in range(self.M):
-            xt_m = self.X_t_prev[m,:]
-            rawStats = xt_m[0:5]
+            xt_m = self.Xt_prev[m,:]
+            rawStats = xt_m[0:6]
             # statsFromEVs = np.floor[xt_m[6:11]/4]
             statsEst = rawStats
             
-            oppSpeedStatEst = self.statsEst[5]
+            oppSpeedStatEst = statsEst[5]
             actPokemonSpeed = activeMonStats["Spe"]
 
             if didMoveFirst:
@@ -91,15 +91,15 @@ class ParticleFilter:
 
         estimateIdxs = nonZeroWeightIdxs[T]
         # self.Xt = self.Xt_bar[estimateIdxs,0:11]
-        self.Xt = self.Xt_bar[estimateIdxs,0:5]
+        self.Xt = self.Xt_bar[estimateIdxs,0:6]
 
-        # self.statsMatrix = self.Xt[:,0:5] + np.floor(self.Xt[:,6:11] /4)
-        self.statsMatrix = self.Xt[:,0:5]
+        # self.statsMatrix = self.Xt[:,0:6] + np.floor(self.Xt[:,6:11] /4)
+        self.statsMatrix = self.Xt[:,0:6]
 
     def estimate_doingDamage(self, activePokemon, oppActivePokemon, moveUsed, damagePercent):
 
         for m in range(self.M):
-            xt_m = self.X_t_prev[m,:]
+            xt_m = self.Xt_prev[m,:]
             weight = self.calcWeight_doingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
             self.weights[m][0] = weight
             self.Xt_bar[m,:] = xt_m
@@ -115,10 +115,10 @@ class ParticleFilter:
 
         estimateIdxs = nonZeroWeightIdxs[T]
         # self.Xt = self.Xt_bar[estimateIdxs,0:11]
-        self.Xt = self.Xt_bar[estimateIdxs,0:5]
+        self.Xt = self.Xt_bar[estimateIdxs,0:6]
 
-        # self.statsMatrix = self.Xt[:,0:5] + np.floor(self.Xt[:,6:11] /4)
-        self.statsMatrix = self.Xt[:,0:5]
+        # self.statsMatrix = self.Xt[:,0:6] + np.floor(self.Xt[:,6:11] /4)
+        self.statsMatrix = self.Xt[:,0:6]
 
 
 
@@ -136,7 +136,7 @@ class ParticleFilter:
         moveCategory = moveUsed.category
 
 
-        rawStats = oppStatsEstDistVec[0:5]
+        rawStats = oppStatsEstDistVec[0:6]
         # statsFromEVs = np.floor[oppStatsEstDistVec[6:11]/4]
 
         statsEst = rawStats
@@ -173,7 +173,7 @@ class ParticleFilter:
     def estimate_receivingDamage(self, activePokemon, oppActivePokemon, moveUsed, damagePercent):
 
         for m in range(self.M):
-            xt_m = self.X_t_prev[m,:]
+            xt_m = self.Xt_prev[m,:]
             weight = self.calcWeight_receivingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
             self.weights[m][0] = weight
             self.Xt_bar[m,:] = xt_m
@@ -189,10 +189,10 @@ class ParticleFilter:
 
         estimateIdxs = nonZeroWeightIdxs[T]
         # self.Xt = self.Xt_bar[estimateIdxs,0:11]
-        self.Xt = self.Xt_bar[estimateIdxs,0:5]
+        self.Xt = self.Xt_bar[estimateIdxs,0:6]
 
-        # self.statsMatrix = self.Xt[:,0:5] + np.floor(self.Xt[:,6:11] /4)
-        self.statsMatrix = self.Xt[:,0:5]
+        # self.statsMatrix = self.Xt[:,0:6] + np.floor(self.Xt[:,6:11] /4)
+        self.statsMatrix = self.Xt[:,0:6]
 
 
 
@@ -210,7 +210,7 @@ class ParticleFilter:
         moveCategory = moveUsed.category
 
 
-        rawStats = oppStatsEstDistVec[0:5]
+        rawStats = oppStatsEstDistVec[0:6]
         # statsFromEVs = np.floor[oppStatsEstDistVec[6:11]/4]
         statsEst = rawStats
 
@@ -264,12 +264,12 @@ class ParticleFilter:
         Spe_BaseRange = [calcStat(pokemon,baseStats[5], 0,0, 0.9),calcStat(pokemon,baseStats[5], 31,255, 1.1)]
 
 
-        X0 = np.concatenate(( np.round( (HP_BaseRange[1] - HP_BaseRange[0]) * np.random.rand(M,1)  + HP_BaseRange[1]), \
-            np.round( (Atk_BaseRange[1] - Atk_BaseRange[0]) * np.random.rand(M,1)  + Atk_BaseRange[1]), \
-            np.round( (Def_BaseRange[1] - Def_BaseRange[0]) * np.random.rand(M,1)  + Def_BaseRange[1]), \
-            np.round( (SpA_BaseRange[1] - SpA_BaseRange[0]) * np.random.rand(M,1)  + SpA_BaseRange[1]), \
-            np.round( (SpD_BaseRange[1] - SpD_BaseRange[0]) * np.random.rand(M,1)  + SpD_BaseRange[1]), \
-            np.round( (Spe_BaseRange[1] - Spe_BaseRange[0]) * np.random.rand(M,1)  + Spe_BaseRange[1]) \
+        X0 = np.concatenate(( np.round( (HP_BaseRange[1] - HP_BaseRange[0]) * np.random.rand(M,1)  + HP_BaseRange[1]),
+            np.round( (Atk_BaseRange[1] - Atk_BaseRange[0]) * np.random.rand(M,1)  + Atk_BaseRange[1]),
+            np.round( (Def_BaseRange[1] - Def_BaseRange[0]) * np.random.rand(M,1)  + Def_BaseRange[1]),
+            np.round( (SpA_BaseRange[1] - SpA_BaseRange[0]) * np.random.rand(M,1)  + SpA_BaseRange[1]),
+            np.round( (SpD_BaseRange[1] - SpD_BaseRange[0]) * np.random.rand(M,1)  + SpD_BaseRange[1]),
+            np.round( (Spe_BaseRange[1] - Spe_BaseRange[0]) * np.random.rand(M,1)  + Spe_BaseRange[1])
             ),axis=1)
 
         return X0
