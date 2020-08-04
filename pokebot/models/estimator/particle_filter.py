@@ -43,7 +43,7 @@ class ParticleFilter:
             xt_m = self.X_t_prev[m,:]
             rawStats = xt_m[0:5]
             # statsFromEVs = np.floor[xt_m[6:11]/4]
-            # statsEst = rawStats + statsFromEVs
+            statsEst = rawStats
             
             oppSpeedStatEst = self.statsEst[5]
             actPokemonSpeed = activeMonStats["Spe"]
@@ -97,7 +97,7 @@ class ParticleFilter:
 
         for m in range(self.M):
             xt_m = self.X_t_prev[m,:]
-            weight = self.calculateWeight_doingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
+            weight = self.calcWeight_doingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
             self.weights[m][0] = weight
             self.Xt_bar[m,:] = xt_m
 
@@ -171,7 +171,7 @@ class ParticleFilter:
 
         for m in range(self.M):
             xt_m = self.X_t_prev[m,:]
-            weight = self.calculateWeight_receivingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
+            weight = self.calcWeight_receivingDamage(damagePercent, xt_m, activePokemon,moveUsed,oppActivePokemon)
             self.weights[m][0] = weight
             self.Xt_bar[m,:] = xt_m
 
@@ -241,35 +241,35 @@ class ParticleFilter:
 
 
 
-def generateInitialDistribution(self,M,pokemon):
+    def generateInitialDistribution(self,M,pokemon):
 
-    # generate initial stat distribution from a set lookup on smogon
+        # generate initial stat distribution from a set lookup on smogon
 
-    # for now prespecify the pokemon: excadrill
+        # for now prespecify the pokemon: excadrill
 
-    name = pokemon.species
-    # name = 'Excadrill'
+        name = pokemon.species
+        # name = 'Excadrill'
 
-    df = loadDatabase(filepath = '../../../resources/pokemon.csv')
-    baseStats = extractBaseStats(name, df)
+        df = loadDatabase(filepath = '../../../resources/pokemon.csv')
+        baseStats = extractBaseStats(name, df)
 
-    HP_BaseRange = [calcHPStat(pokemon, baseStats[0], 0, 0),calcHPStat(pokemon, baseStats[0], 31, 255)]
-    Atk_BaseRange = [calcStat(pokemon,baseStats[1], 0,0, 0.9),calcStat(pokemon,baseStats[1], 31,255, 1.1)]
-    Def_BaseRange = [calcStat(pokemon,baseStats[2], 0,0, 0.9),calcStat(pokemon,baseStats[2], 31,255, 1.1)]
-    SpA_BaseRange = [calcStat(pokemon,baseStats[3], 0,0, 0.9),calcStat(pokemon,baseStats[3], 31,255, 1.1)]
-    SpD_BaseRange = [calcStat(pokemon,baseStats[4], 0,0, 0.9),calcStat(pokemon,baseStats[4], 31,255, 1.1)]
-    Spe_BaseRange = [calcStat(pokemon,baseStats[5], 0,0, 0.9),calcStat(pokemon,baseStats[5], 31,255, 1.1)]
+        HP_BaseRange = [calcHPStat(pokemon, baseStats[0], 0, 0),calcHPStat(pokemon, baseStats[0], 31, 255)]
+        Atk_BaseRange = [calcStat(pokemon,baseStats[1], 0,0, 0.9),calcStat(pokemon,baseStats[1], 31,255, 1.1)]
+        Def_BaseRange = [calcStat(pokemon,baseStats[2], 0,0, 0.9),calcStat(pokemon,baseStats[2], 31,255, 1.1)]
+        SpA_BaseRange = [calcStat(pokemon,baseStats[3], 0,0, 0.9),calcStat(pokemon,baseStats[3], 31,255, 1.1)]
+        SpD_BaseRange = [calcStat(pokemon,baseStats[4], 0,0, 0.9),calcStat(pokemon,baseStats[4], 31,255, 1.1)]
+        Spe_BaseRange = [calcStat(pokemon,baseStats[5], 0,0, 0.9),calcStat(pokemon,baseStats[5], 31,255, 1.1)]
 
 
-    X0 = np.concatenate(( np.round( (HP_BaseRange[1] - HP_BaseRange[0]) * np.random.rand(M,1)  + HP_BaseRange[1]), \
-        np.round( (Atk_BaseRange[1] - Atk_BaseRange[0]) * np.random.rand(M,1)  + Atk_BaseRange[1]), \
-        np.round( (Def_BaseRange[1] - Def_BaseRange[0]) * np.random.rand(M,1)  + Def_BaseRange[1]), \
-        np.round( (SpA_BaseRange[1] - SpA_BaseRange[0]) * np.random.rand(M,1)  + SpA_BaseRange[1]), \
-        np.round( (SpD_BaseRange[1] - SpD_BaseRange[0]) * np.random.rand(M,1)  + SpD_BaseRange[1]), \
-        np.round( (Spe_BaseRange[1] - Spe_BaseRange[0]) * np.random.rand(M,1)  + Spe_BaseRange[1]) \
-        ),axis=1)
+        X0 = np.concatenate(( np.round( (HP_BaseRange[1] - HP_BaseRange[0]) * np.random.rand(M,1)  + HP_BaseRange[1]), \
+            np.round( (Atk_BaseRange[1] - Atk_BaseRange[0]) * np.random.rand(M,1)  + Atk_BaseRange[1]), \
+            np.round( (Def_BaseRange[1] - Def_BaseRange[0]) * np.random.rand(M,1)  + Def_BaseRange[1]), \
+            np.round( (SpA_BaseRange[1] - SpA_BaseRange[0]) * np.random.rand(M,1)  + SpA_BaseRange[1]), \
+            np.round( (SpD_BaseRange[1] - SpD_BaseRange[0]) * np.random.rand(M,1)  + SpD_BaseRange[1]), \
+            np.round( (Spe_BaseRange[1] - Spe_BaseRange[0]) * np.random.rand(M,1)  + Spe_BaseRange[1]) \
+            ),axis=1)
 
-    return X0
+        return X0
 
 
 

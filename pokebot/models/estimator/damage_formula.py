@@ -38,8 +38,8 @@ def calcDamage(activePokemon,oppActivePokemon, moveUsed):
 		
 	STAB = 1
 
-	if np.any(moveType == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
-	   STAB = 1.5
+	if np.any(moveType == activeMonTypes[i] for i in range(len(activeMonTypes))):
+		STAB = 1.5
 
 
 
@@ -93,7 +93,7 @@ def calcDamage_model(activePokemon,oppActivePokemon, A,D, moveUsed):
 	STAB = 1
 
 	if np.any(moveType == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
-	   STAB = 1.5
+		STAB = 1.5
 
 
 
