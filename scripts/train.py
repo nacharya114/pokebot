@@ -14,7 +14,7 @@ from poke_env.player.random_player import RandomPlayer
 from poke_env.player_configuration import PlayerConfiguration
 from poke_env.player.baselines import MaxBasePowerPlayer, SimpleHeuristicsPlayer
 
-from pokebot import BotPlayer
+from pokebot.bots import BotPlayer
 
 
 async def train(hparams, fp):

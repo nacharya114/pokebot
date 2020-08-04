@@ -10,8 +10,7 @@ from poke_env.environment.battle import Battle
 from poke_env.environment.move_category import MoveCategory
 from poke_env.environment.side_condition import SideCondition
 
-from pokebot.models.estimator.estimator import PokemonEstimator
-from pokebot.models.estimator.particle_filter import ParticleFilter
+from ..models.estimator.estimator import PokemonEstimator
 
 
 class StateEngine(ABC):
@@ -197,17 +196,13 @@ class PFStateEngine(StateEngine):
     Total State Space size = 72 + 12 + 12 + 4 + 5 = 105
     """
 
-
     def __init__(self):
 
         super().__init__(105)
 
         self.pfs = {}
 
-
     def convert(self, battle: Battle):
-
-        state = []
 
         # Main mons shortcuts
         active = battle.active_pokemon
@@ -232,11 +227,31 @@ class PFStateEngine(StateEngine):
 
         # Active moves
         # TODO Implement Damage calc based on stat estimate
+        active_moves = [(m.base_power
+                        * (1.5 if m.type in active.types else 1)
+                        * opponent.damage_multiplier(m)
+                        * m.accuracy
+                        ) / 100 for m in battle.available_moves]
 
         # Move Scores
         # TODO Implement Aggregate Move scores
+        team_move_scores = [np.mean([opp_p.move_score(m, p)
+                                     for m in p.moves.values()])
+                            if p.current_hp > 0 else 0
+                            for p in battle.team.values()
+                            for k, opp_p in self.pfs]
 
         # return concatenated state
+        state = np.concatenate([
+            self_pkmn,
+            opp_pkmn,
+            self_isActive,
+            opp_isActive,
+            self_hp_remaining,
+            opp_hp_remaining,
+            active_moves,
+            team_move_scores
+        ])
 
-
-        pass
+        print(state.shape)
+        return state

@@ -13,7 +13,7 @@
         "target_model_update": 1,
         "delta_clip": 0.01
     },
-    "state_engine": "HeuristicStateEngine",
+    "state_engine": "PFStateEngine",
     "model": "DQNModel",
     "trainer":"SimpleDQNTrainer",
     "trainer_params": {

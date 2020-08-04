@@ -15,6 +15,7 @@ from poke_env.teambuilder.teambuilder import Teambuilder
 from .state_engine              import StateEngine
 from .utils                     import *
 
+
 class BotPlayer(EnvPlayer):
 
     _ACTION_SPACE = list(range(4 * 2 + 6))

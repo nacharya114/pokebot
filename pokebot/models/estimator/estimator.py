@@ -7,6 +7,7 @@ import numpy as np
 from abc import ABC
 
 from poke_env.environment.battle import Battle
+from poke_env.environment.move import Move
 from poke_env.environment.pokemon import Pokemon
 
 from pokebot.models.estimator.particle_filter import ParticleFilter
@@ -19,7 +20,7 @@ class PokemonEstimator():
 
         self.pkmn = pkmn
 
-        self.pf = ParticleFilter(X0=None, M=None)
+        self.pf = ParticleFilter(M=100, pokemon=self.pkmn)
 
     @property
     def hp(self):
@@ -30,7 +31,7 @@ class PokemonEstimator():
         return np.mean(self.pf.statsEstMatrix[:, 1])
 
     @property
-    def defense(self)
+    def defense(self):
         return np.mean(self.pf.statsEstMatrix[:, 2])
 
     @property
@@ -56,4 +57,13 @@ class PokemonEstimator():
             self.spdef,
             self.speed
         ])
+
+    def move_score(self, move: Move, opp: Pokemon):
+        type_adv = self.pkmn.damage_multiplier(move)
+        stab_bonus = 1.5 if move.type in opp.types else 1
+
+        calc = type_adv * stab_bonus
+
+        return calc
+
 

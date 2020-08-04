@@ -7,12 +7,10 @@
 from tensorflow.keras.layers import Dense, Flatten
 from tensorflow.keras.models import Sequential
 
-from ..bots.bot import BotPlayer
-
 
 class DQNModel:
 
-    def __init__(self, player: BotPlayer):
+    def __init__(self, player):
         self.player = player
         self.model = None
         self.setup_model_layers()

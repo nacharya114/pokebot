@@ -6,12 +6,15 @@
 
 # from .estimator import Estimator
 import numpy as np
+import os
 import random
 
 from .damage_formula import *
 
 from .statFormulas import *
+from pokebot.configs import *
 
+PKMN_RESOURCE_PATH = os.path.join(ROOT_DIR, '..', 'resources', 'pokemon.csv')
 
 class ParticleFilter:
 
@@ -250,7 +253,7 @@ class ParticleFilter:
         name = pokemon.species
         # name = 'Excadrill'
 
-        df = loadDatabase(filepath = '../../../resources/pokemon.csv')
+        df = loadDatabase(filepath=PKMN_RESOURCE_PATH)
         baseStats = extractBaseStats(name, df)
 
         HP_BaseRange = [calcHPStat(pokemon, baseStats[0], 0, 0),calcHPStat(pokemon, baseStats[0], 31, 255)]
