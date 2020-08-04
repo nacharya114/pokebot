@@ -1,4 +1,4 @@
-clear;clc;close all
+clearclcclose all
 defineStructs
 
 %define battle
@@ -18,35 +18,35 @@ damage2Percent = 100*damage2/battle.activePokemon.HP
 
 
 % PF for doing damage to enemy mon
-M = 1000;
+M = 1000
 
 oppStatEstVec = [mean(battle.opponentActivePokemon.HP_wEVs),...
     mean(battle.opponentActivePokemon.Atk_wEVs),...
     mean(battle.opponentActivePokemon.Def_wEVs),...
     mean(battle.opponentActivePokemon.SpA_wEVs),...
     mean(battle.opponentActivePokemon.SpD_wEVs),...
-    mean(battle.opponentActivePokemon.Spe_wEVs)];
+    mean(battle.opponentActivePokemon.Spe_wEVs)]
 
 oppStatEstSpreadMaxVec = [max(battle.opponentActivePokemon.HP_wEVs),...
     max(battle.opponentActivePokemon.Atk_wEVs),...
     max(battle.opponentActivePokemon.Def_wEVs),...
     max(battle.opponentActivePokemon.SpA_wEVs),...
     max(battle.opponentActivePokemon.SpD_wEVs),...
-    max(battle.opponentActivePokemon.Spe_wEVs)];
+    max(battle.opponentActivePokemon.Spe_wEVs)]
 
 oppStatEstSpreadMinVec = [min(battle.opponentActivePokemon.HP_wEVs),...
     min(battle.opponentActivePokemon.Atk_wEVs),...
     min(battle.opponentActivePokemon.Def_wEVs),...
     min(battle.opponentActivePokemon.SpA_wEVs),...
     min(battle.opponentActivePokemon.SpD_wEVs),...
-    min(battle.opponentActivePokemon.Spe_wEVs)];
+    min(battle.opponentActivePokemon.Spe_wEVs)]
 
 
 
 %TODO: replace pure uniform distribution with one informed by usage
 %statistics
 
-X0 = generateInitialDistribution(M,battle.opponentActivePokemon);
+X0 = generateInitialDistribution(M,battle.opponentActivePokemon)
 
 % sum(EV_distr_matrix,2)
 % 
@@ -56,21 +56,21 @@ X0 = generateInitialDistribution(M,battle.opponentActivePokemon);
 %filter for speed
 didMoveFirst = false
 
-[statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_speed(M,X0,battle.activePokemon, didMoveFirst);
+[statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_speed(M,X0,battle.activePokemon, didMoveFirst)
 
-oppStatEstVec = [oppStatEstVec; statsEstMeanVec];
-oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec; statsEstMaxVec];
-oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
+oppStatEstVec = [oppStatEstVec statsEstMeanVec]
+oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec statsEstMaxVec]
+oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec statsEstMinVec]
 
 
 %filter for doing damage to enemy pokemon
 
 [statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_doingDamage(M,Xt, ...
-    damage1Percent, battle.activePokemon, battle,move1,damageMult1);
+    damage1Percent, battle.activePokemon, battle,move1,damageMult1)
 
-oppStatEstVec = [oppStatEstVec; statsEstMeanVec];
-oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec; statsEstMaxVec];
-oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
+oppStatEstVec = [oppStatEstVec statsEstMeanVec]
+oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec statsEstMaxVec]
+oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec statsEstMinVec]
 
 % sum(Xt(:,7:12),2)
 % pause
@@ -78,11 +78,11 @@ oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
 
 
 [statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_receivingDamage(M,Xt, ...
-    damage2Percent, battle.activePokemon,battle.opponentActivePokemon, battle,move2,damageMult2);
+    damage2Percent, battle.activePokemon,battle.opponentActivePokemon, battle,move2,damageMult2)
 
-oppStatEstVec = [oppStatEstVec; statsEstMeanVec];
-oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec; statsEstMaxVec];
-oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
+oppStatEstVec = [oppStatEstVec statsEstMeanVec]
+oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec statsEstMaxVec]
+oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec statsEstMinVec]
 
 
 
@@ -90,11 +90,11 @@ oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
 %filter for doing damage to enemy pokemon
 
 [statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_doingDamage(M,Xt, ...
-    damage1Percent, battle.activePokemon, battle,move1,damageMult1);
+    damage1Percent, battle.activePokemon, battle,move1,damageMult1)
 
-oppStatEstVec = [oppStatEstVec; statsEstMeanVec];
-oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec; statsEstMaxVec];
-oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
+oppStatEstVec = [oppStatEstVec statsEstMeanVec]
+oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec statsEstMaxVec]
+oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec statsEstMinVec]
 
 % sum(Xt(:,7:12),2)
 % pause
@@ -102,11 +102,11 @@ oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
 
 
 [statsEstMeanVec, statsEstMaxVec,statsEstMinVec,Xt] = particleFilter_receivingDamage(M,Xt, ...
-    damage2Percent, battle.activePokemon,battle.opponentActivePokemon, battle,move2,damageMult2);
+    damage2Percent, battle.activePokemon,battle.opponentActivePokemon, battle,move2,damageMult2)
 
-oppStatEstVec = [oppStatEstVec; statsEstMeanVec];
-oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec; statsEstMaxVec];
-oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec; statsEstMinVec];
+oppStatEstVec = [oppStatEstVec statsEstMeanVec]
+oppStatEstSpreadMaxVec = [oppStatEstSpreadMaxVec statsEstMaxVec]
+oppStatEstSpreadMinVec = [oppStatEstSpreadMinVec statsEstMinVec]
 
 
 figure(1)

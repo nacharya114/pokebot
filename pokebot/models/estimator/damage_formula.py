@@ -15,50 +15,50 @@ def calcDamage(activePokemon,oppActivePokemon, moveUsed):
 	activeMonTypes = activePokemon.types
 	oppActiveMonTypes = oppActivePokemon.types
 
-	level = activePokemon.level;
-	weather = 1;
-	burn = 1;
-	moveCategory = moveUsed.category;
+	level = activePokemon.level
+	weather = 1
+	burn = 1
+	moveCategory = moveUsed.category
 
 	activeMonStats = activePokemon.stats
 	oppActiveMonStats = oppActivePokemon.stats
 
 	if moveCategory == MoveCategory.PHYSICAL:
-		A = activeMonStats["Atk"];
+		A = activeMonStats["Atk"]
 		D = oppActiveMonStats["Def"]
 		
 	elif moveCategory == MoveCategory.SPECIAL:
-		A = activeMonStats["SpA"];
+		A = activeMonStats["SpA"]
 		D = oppActiveMonStats["SpD"]
 		
 
 
-	power = moveUsed.base_power;
-	moveType = moveUsed.type;
+	power = moveUsed.base_power
+	moveType = moveUsed.type
 		
-	STAB = 1;
+	STAB = 1
 
-	if np.any(moveTyping == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
-	   STAB = 1.5;
+	if np.any(moveType == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
+	   STAB = 1.5
 
 
 
-	targets = 1;
+	targets = 1
 
-	critical = 1;
+	critical = 1
 
-	random = (1 - 0.85)*rand(1) + 0.85;
-	# random = 1;
+	random = (1 - 0.85)*rand(1) + 0.85
+	# random = 1
 
-	other = 1;
+	other = 1
 
 	damageMultiplier = moveUsed.type.damage_multiplier(oppActivePokemon.type_1, oppActivePokemon.type_2)
 
 
 
-	modifier = targets * weather * critical*random*STAB*damageMultiplier*burn*other;
+	modifier = targets * weather * critical*random*STAB*damageMultiplier*burn*other
 
-	damage = np.floor( (((((2*level/5) +2) * power * A/D)/50) + 2) * modifier);
+	damage = np.floor( (((((2*level/5) +2) * power * A/D)/50) + 2) * modifier)
 	return damage
 
 
@@ -69,47 +69,48 @@ def calcDamage_model(activePokemon,oppActivePokemon, A,D, moveUsed):
 	activeMonTypes = activePokemon.types
 	oppActiveMonTypes = oppActivePokemon.types
 
-	level = activePokemon.level;
-	weather = 1;
-	burn = 1;
-	moveCategory = moveUsed.category;
+	level = activePokemon.level
+	weather = 1
+	burn = 1
+	moveCategory = moveUsed.category
 
 	activeMonStats = activePokemon.stats
+	oppActiveMonStats = oppActivePokemon.stats
 
-	if moveCategory == MoveCategory.PHYSICAL
-		A = activeMonStats["Atk"];
+	if moveCategory == MoveCategory.PHYSICAL:
+		A = activeMonStats["Atk"]
 		D = oppActiveMonStats["Def"]
 		
-	elif moveCategory == MoveCategory.SPECIAL
-		A = activeMonStats["SpA"];
+	elif moveCategory == MoveCategory.SPECIAL:
+		A = activeMonStats["SpA"]
 		D = oppActiveMonStats["SpD"]
 		
 
 
-	power = moveUsed.base_power;
-	moveType = moveUsed.type;
+	power = moveUsed.base_power
+	moveType = moveUsed.type
 		
-	STAB = 1;
+	STAB = 1
 
-	if np.any(moveTyping == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
-	   STAB = 1.5;
+	if np.any(moveType == activeMonTypes[i] for i in range(len(activeMonTypes))  ):
+	   STAB = 1.5
 
 
 
-	targets = 1;
+	targets = 1
 
-	critical = 1;
+	critical = 1
 
-	random = (1 - 0.85)*rand(1) + 0.85;
-	# random = 1;
+	random = (1 - 0.85)*rand(1) + 0.85
+	# random = 1
 
-	other = 1;
+	other = 1
 
 	damageMultiplier = moveUsed.type.damage_multiplier(oppActivePokemon.type_1, oppActivePokemon.type_2)
 
 
 
-	modifier = targets * weather * critical*random*STAB*damageMultiplier*burn*other;
+	modifier = targets * weather * critical*random*STAB*damageMultiplier*burn*other
 
-	damage = np.floor( (((((2*level/5) +2) * power * A/D)/50) + 2) * modifier);
+	damage = np.floor( (((((2*level/5) +2) * power * A/D)/50) + 2) * modifier)
 	return damage

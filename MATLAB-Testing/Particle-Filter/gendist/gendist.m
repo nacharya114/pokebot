@@ -34,15 +34,15 @@ function T = gendist(P,N,M,varargin)
 %
 %EXAMPLE 1:
 %
-%P = rand(1,50);
-%T = gendist(P,100,1000,'plot');
+%P = rand(1,50)
+%T = gendist(P,100,1000,'plot')
 %
 %EXAMPLE 2:
 %
-%X = -3:0.1:3;
-%P = 1+sin(X);
-%T = gendist(P,100,1000,'plot');
-%Xrand = X(T);
+%X = -3:0.1:3
+%P = 1+sin(X)
+%T = gendist(P,100,1000,'plot')
+%Xrand = X(T)
 %
 %Note:
 %size(T) = 100 1000
@@ -65,29 +65,29 @@ if or(N<1,M<1)
 end
 
 %normalize P
-Pnorm=[0 P]/sum(P);
+Pnorm=[0 P]/sum(P)
 
 %create cumlative distribution
-Pcum=cumsum(Pnorm);
+Pcum=cumsum(Pnorm)
 
 %create random matrix
-N=round(N);
-M=round(M);
-R=rand(1,N*M);
+N=round(N)
+M=round(M)
+R=rand(1,N*M)
 
 %calculate T output matrix
-V=1:length(P);
-[~,inds] = histc(R,Pcum); 
-T = V(inds);
+V=1:length(P)
+[~,inds] = histc(R,Pcum)
+T = V(inds)
 
 %shape into output matrix
-T=reshape(T,N,M);
+T=reshape(T,N,M)
 
 %if desired, output plot
 if nargin==4
     if strcmp(varargin{1},'plot')
-        Pfreq=N*M*P/sum(P);
-        figure;
+        Pfreq=N*M*P/sum(P)
+        figure
         hold on
         hist(T(T>0),1:length(P))
         plot(Pfreq,'r-o')
