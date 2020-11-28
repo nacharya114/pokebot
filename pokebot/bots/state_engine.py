@@ -196,7 +196,7 @@ class PFStateEngine(StateEngine):
     Total State Space size = 72 + 12 + 12 + 4 + 5 = 105
     """
 
-    def __init__(self, initBattle : Battle):
+    def __init__(self):
 
         super().__init__(105)
 
@@ -212,9 +212,6 @@ class PFStateEngine(StateEngine):
         active = battle.active_pokemon
         opponent = battle.opponent_active_pokemon
 
-        self.battle = battle
-
-
         # incoming information from the battle object
         moveUsed = 0
         oppMoveUsed = 0
@@ -222,13 +219,15 @@ class PFStateEngine(StateEngine):
         damageDealt = 100 * ((opponent.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
         damageReceived = 100 * ((active.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
         didMoveFirst = 0
+        switched = 0
 
         # Initialize stat estimate values
         self_pkmn = np.zeros(6*6)  # TODO Add real stat values here
-        if len(self.pfs) == 0:
-            self.pfs = {k: PokemonEstimator(k) for k in battle.opponent_team.values()}
-        else:
-            # after the first turn
+        if opponent not in self.pfs.keys():
+            self.pfs[opponent] = PokemonEstimator(pkmn=opponent)
+
+        # Update based on deltas
+        if not switched:
             self.pfs[opponent].update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
 
         opp_pkmn = [p.returnMeanStatsEstimate() for p in self.pfs.values()]
