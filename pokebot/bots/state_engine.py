@@ -196,11 +196,15 @@ class PFStateEngine(StateEngine):
     Total State Space size = 72 + 12 + 12 + 4 + 5 = 105
     """
 
-    def __init__(self):
+    def __init__(self, initBattle : Battle):
 
         super().__init__(105)
 
         self.pfs = {}
+        self.prevBattle = initBattle
+        self.battle = 0
+        self.switched = False
+        self.oppSwitched = False
 
     def convert(self, battle: Battle):
 
@@ -208,11 +212,15 @@ class PFStateEngine(StateEngine):
         active = battle.active_pokemon
         opponent = battle.opponent_active_pokemon
 
+        self.battle = battle
+
+
         # incoming information from the battle object
         moveUsed = 0
         oppMoveUsed = 0
-        damageDealt = 0
-        damageReceived = 0
+
+        damageDealt = 100 * ((opponent.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
+        damageReceived = 100 * ((active.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
         didMoveFirst = 0
 
         # Initialize stat estimate values
@@ -220,9 +228,8 @@ class PFStateEngine(StateEngine):
         if len(self.pfs) == 0:
             self.pfs = {k: PokemonEstimator(k) for k in battle.opponent_team.values()}
         else:
-            pass
             # after the first turn
-            self.pfs{opponent.name}.update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
+            self.pfs[opponent].update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
 
         opp_pkmn = [p.returnMeanStatsEstimate() for p in self.pfs.values()]
 
@@ -263,4 +270,5 @@ class PFStateEngine(StateEngine):
         ])
 
         print(state.shape)
+        self.prevBattle = self.battle
         return state
