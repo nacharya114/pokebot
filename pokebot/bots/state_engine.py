@@ -201,10 +201,7 @@ class PFStateEngine(StateEngine):
         super().__init__(105)
 
         self.pfs = {}
-        self.prevBattle = initBattle
-        self.battle = 0
-        self.switched = False
-        self.oppSwitched = False
+        self.prevBattle = None
 
     def convert(self, battle: Battle):
 
@@ -216,10 +213,16 @@ class PFStateEngine(StateEngine):
         moveUsed = 0
         oppMoveUsed = 0
 
-        damageDealt = 100 * ((opponent.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
-        damageReceived = 100 * ((active.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
         didMoveFirst = 0
-        switched = 0
+
+        if self.prevBattle:
+            damageDealt = 100 * ((opponent.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
+            damageReceived = 100 * ((active.current_hp_fraction) - (self.prevBattle.opponent_active_pokemon.current_hp_fraction))
+
+
+
+            switched = active == self.prevBattle.active_pokemon
+            oppSwitched = opponent == self.prevBattle.opponent_active_pokemon
 
         # Initialize stat estimate values
         self_pkmn = np.zeros(6*6)  # TODO Add real stat values here
@@ -227,7 +230,7 @@ class PFStateEngine(StateEngine):
             self.pfs[opponent] = PokemonEstimator(pkmn=opponent)
 
         # Update based on deltas
-        if not switched:
+        if self.prevBattle and (not switched) and (not oppSwitched):
             self.pfs[opponent].update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
 
         opp_pkmn = [p.returnMeanStatsEstimate() for p in self.pfs.values()]
@@ -269,5 +272,5 @@ class PFStateEngine(StateEngine):
         ])
 
         print(state.shape)
-        self.prevBattle = self.battle
+        self.prevBattle = battle
         return state
