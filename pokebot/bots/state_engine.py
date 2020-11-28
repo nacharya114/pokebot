@@ -214,15 +214,16 @@ class PFStateEngine(StateEngine):
         damageDealt = 0
         damageReceived = 0
         didMoveFirst = 0
+        switched = 0
 
         # Initialize stat estimate values
         self_pkmn = np.zeros(6*6)  # TODO Add real stat values here
-        if len(self.pfs) == 0:
-            self.pfs = {k: PokemonEstimator(k) for k in battle.opponent_team.values()}
-        else:
-            pass
-            # after the first turn
-            self.pfs{opponent.name}.update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
+        if opponent not in self.pfs.keys():
+            self.pfs[opponent] = PokemonEstimator(pkmn=opponent)
+
+        # Update based on deltas
+        if not switched:
+            self.pfs[opponent].update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
 
         opp_pkmn = [p.returnMeanStatsEstimate() for p in self.pfs.values()]
 
