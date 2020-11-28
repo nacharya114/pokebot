@@ -181,7 +181,7 @@ class HeuristicStateEngine(StateEngine):
 
 class PFStateEngine(StateEngine):
     """
-    State Engine Class that implements PArticle Filter Estimation for fully expressive state space.
+    State Engine Class that implements Particle Filter Estimation for fully expressive state space.
 
     The state space will include:
         - Stats for all pkmn, self and enemy (12 * 6 = 72)
@@ -208,14 +208,23 @@ class PFStateEngine(StateEngine):
         active = battle.active_pokemon
         opponent = battle.opponent_active_pokemon
 
+        # incoming information from the battle object
+        moveUsed = 0
+        oppMoveUsed = 0
+        damageDealt = 0
+        damageReceived = 0
+        didMoveFirst = 0
+
         # Initialize stat estimate values
         self_pkmn = np.zeros(6*6)  # TODO Add real stat values here
         if len(self.pfs) == 0:
             self.pfs = {k: PokemonEstimator(k) for k in battle.opponent_team.values()}
         else:
             pass
-            # TODO: Leo, update PF values here
-        opp_pkmn = [p.estimate() for p in self.pfs.values()]
+            # after the first turn
+            self.pfs{opponent.name}.update(active, opponent, moveUsed, oppMoveUsed, damageDealt, damageReceived, didMoveFirst)
+
+        opp_pkmn = [p.returnMeanStatsEstimate() for p in self.pfs.values()]
 
         # is Active Booleans
         self_isActive = np.zeros(6)

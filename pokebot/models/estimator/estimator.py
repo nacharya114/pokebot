@@ -46,8 +46,18 @@ class PokemonEstimator():
     def speed(self):
         return np.mean(self.pf.statsMatrix[:, 5])
 
+    def update(self, activePokemon, oppActivePokemon, moveUsed, oppMoveUsed, damagePercentDone, damagePercentReceived, didMoveFirst):
 
-    def estimate(self):
+        # update speed
+        self.pf.estimate_speed(self, activePokemon, didMoveFirst)
+
+        # update stats
+        self.pf.estimate_doingDamage(self, activePokemon, oppActivePokemon, moveUsed, damagePercentDone)
+
+        self.pf.estimate_receivingDamage(self, activePokemon, oppActivePokemon, oppMoveUsed, damagePercentReceived)
+
+
+    def returnMeanStatsEstimate(self,):
 
         return np.concatenate([
             self.hp,
