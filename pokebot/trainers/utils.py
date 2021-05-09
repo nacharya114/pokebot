@@ -10,14 +10,12 @@ from typing import Callable
 from poke_env.player.env_player import EnvPlayer
 from poke_env.player.player import Player
 
-import wandb
-from wandb.keras import WandbCallback
-wandb.init(project="pokebot")
-
-
-
-def dqn_training(player, dqn, nb_steps):
-    dqn.fit(player, nb_steps=nb_steps, callbacks=[WandbCallback(log_weights=True)])
+def dqn_training(player, dqn, nb_steps, callback=True):
+    callbacks=[]
+    if callback:
+        from wandb.keras import WandbCallback
+        callbacks=[WandbCallback(log_weights=True)]
+    dqn.fit(player, nb_steps=nb_steps, callbacks=callbacks)
 
     # This call will finished eventual unfinshed battles before returning
     player.complete_current_battle()

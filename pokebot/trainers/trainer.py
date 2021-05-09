@@ -79,9 +79,9 @@ class SimpleDQNTrainer(Trainer):
             **agent_dict
         )
 
-        self.agent.compile(Adam(lr=0.0003), metrics=["mse"])
+        self.agent.compile(Adam(lr=0.0005), metrics=["mae"])
 
-    async def train(self, opponent: Optional[Player] = None, nb_steps=None):
+    async def train(self, opponent: Optional[Player] = None, nb_steps=None, wandb_on=True):
 
         if not opponent:
             opponent = self.opponent
@@ -93,10 +93,14 @@ class SimpleDQNTrainer(Trainer):
         self.player.play_against(
             env_algorithm=dqn_training,
             opponent=opponent,
-            env_algorithm_kwargs={"dqn": self.agent, "nb_steps": nb_steps},
+            env_algorithm_kwargs={"dqn": self.agent, "nb_steps": nb_steps, "callback": wandb_on},
         )
 
-    async def evaluate(self, playerList: List[Player], logger=log):
+    async def evaluate(self, playerList: List[Player], wandb_on=True):
+        logger = None
+        if wandb_on:
+            from wandb import log
+            logger = log
         for p in playerList:
             # Evaluation
             print(f"Results against player: {p.username}")
