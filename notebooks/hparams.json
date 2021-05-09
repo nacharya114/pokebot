@@ -21,7 +21,11 @@
     "trainer_params": {
         "opponent"  : {
             "type": "RandomPlayer",
-            "format": "gen8randombattle"
+            "format": "gen8randombattle",
+            "server_configuration": {
+                "server_url": "ps:8000",
+                "authentication_url": "authentication-endpoint.com/action.php?"
+            }
         },
         "nbsteps": 10000
     }
