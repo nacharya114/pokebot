@@ -12,7 +12,7 @@ from poke_env.player_configuration import PlayerConfiguration
 from poke_env.server_configuration import ServerConfiguration
 from poke_env.teambuilder.teambuilder import Teambuilder
 
-from .state_engine              import StateEngine
+from .state_engine              import StateEngine, SimpleStateEngine
 from .utils                     import *
 
 class BotPlayer(EnvPlayer):
@@ -61,6 +61,9 @@ class BotPlayer(EnvPlayer):
             start_listening=True,
             team=team
         )
+
+        if state_engine is None:
+            state_engine = SimpleStateEngine()
 
         self.state_engine = state_engine
 

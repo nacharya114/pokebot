@@ -5,10 +5,6 @@ import asyncio
 import importlib
 import nest_asyncio
 nest_asyncio.apply()
-import wandb
-wandb.init()
-wandb.run.name = wandb.run.id
-wandb.run.save()
 
 from poke_env.player.random_player import RandomPlayer
 from poke_env.player_configuration import PlayerConfiguration
@@ -18,7 +14,7 @@ from pokebot import BotPlayer
 
 
 async def train(hparams, fp):
-    wandb.config.update(hparams)
+    # wandb.config.update(hparams)
     p_dict = hparams.policy
     a_dict = hparams.agent
 

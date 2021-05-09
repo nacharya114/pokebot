@@ -29,6 +29,9 @@ class StateEngine(ABC):
 
 class SimpleStateEngine(StateEngine):
 
+    def __init__(self, **kwargs):
+        super().__init__(shape=10)
+
     def convert(self, battle):
         # -1 indicates that the move does not have a base power
         # or is not available

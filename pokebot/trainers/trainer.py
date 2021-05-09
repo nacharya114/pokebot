@@ -96,12 +96,12 @@ class SimpleDQNTrainer(Trainer):
             env_algorithm_kwargs={"dqn": self.agent, "nb_steps": nb_steps},
         )
 
-    async def evaluate(self, playerList: List[Player]):
+    async def evaluate(self, playerList: List[Player], logger=log):
         for p in playerList:
             # Evaluation
             print(f"Results against player: {p.username}")
             self.player.play_against(
                 env_algorithm=dqn_evaluation,
                 opponent=p,
-                env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100, "logger": log},
+                env_algorithm_kwargs={"dqn": self.agent, "nb_episodes": 100, "logger": logger},
             )
