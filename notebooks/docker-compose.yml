@@ -7,7 +7,8 @@ services:
       - GRANT_SUDO=yes
       - JUPYTER_ENABLE_LAB=yes
     volumes: 
-        - '/home/nacharya/pokebot:/home/jovyan/work'
+        - '${HOME_DIR}:/home/jovyan/work'
+        - '${HOME_DIR}/notebooks/startup:/usr/local/bin/before-notebook.d/'
     ports:
       - "8888:8888"
   ps:

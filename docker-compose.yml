@@ -2,11 +2,16 @@ version: "3.9"
 services:
   trainer:
     build: .
-    command: [ "scripts/train.py", "scripts/hparams.json", "/home/pokebot/models", "ps:8000" ]
+    command: [ "scripts/train.py", 
+            "scripts/hparams.json", 
+            "/home/pokebot/models",
+            # "--no-wandb" # uncomment this line if you wand to integrate with Weights & Biases. 
+            "--server", "ps:8000"
+            ]
     volumes: 
-        - models:/home/pokebot/models
-    ports:
-      - "8888:8888"
+      - models:/home/pokebot/models
+    depends_on: 
+      - ps
   ps:
     image: nacharya114/pokemonshowdown
     ports:
