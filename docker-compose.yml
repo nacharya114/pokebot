@@ -1,16 +1,15 @@
 version: "3.9"
 services:
-  notebook:
-    image: jupyter/datascience-notebook
-    user: root
-    environment:
-      - GRANT_SUDO=yes
-      - JUPYTER_ENABLE_LAB=yes
+  trainer:
+    build: .
+    command: [ "scripts/train.py", "scripts/hparams.json", "/home/pokebot/models", "ps:8000" ]
     volumes: 
-        - '/home/nacharya/pokebot:/home/jovyan/work'
+        - models:/home/pokebot/models
     ports:
       - "8888:8888"
   ps:
     image: nacharya114/pokemonshowdown
     ports:
       - "8000:8000"
+volumes: 
+  models: {}

@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  notebook:
+    image: jupyter/datascience-notebook
+    user: root
+    environment:
+      - GRANT_SUDO=yes
+      - JUPYTER_ENABLE_LAB=yes
+    volumes: 
+        - '/home/nacharya/pokebot:/home/jovyan/work'
+    ports:
+      - "8888:8888"
+  ps:
+    image: nacharya114/pokemonshowdown
+    ports:
+      - "8000:8000"
