@@ -24,10 +24,11 @@ from ..bots.bot import BotPlayer
 
 class Trainer(ABC):
 
-    def __init__(self, player: BotPlayer, model: DQNModel, policy_dict: dict, agent_dict: dict, **kwargs):
+    def __init__(self, player: BotPlayer, model: DQNModel, policy_dict: dict, agent_dict: dict, server_configuration=None, **kwargs):
         super().__init__()
 
         self.player = player
+        self.server_configuration = server_configuration
 
         self.model = model
 
@@ -57,11 +58,13 @@ class Trainer(ABC):
 
 class SimpleDQNTrainer(Trainer):
 
-    def __init__(self, player, model, policy_dict, agent_dict, opponent=RandomPlayer(battle_format="gen8randombattle"),
+    def __init__(self, player, model, policy_dict, agent_dict, opponent=None,
                  nbsteps=100000, **kwargs):
         super().__init__(player, model, policy_dict, agent_dict, **kwargs)
 
-        self.opponent = opponent if isinstance(opponent, Player) else PlayerFactory.get_player(**opponent)
+        pf = PlayerFactory(server_configuration=self.server_configuration)
+
+        self.opponent = opponent if isinstance(opponent, Player) else pf.get_player(**opponent)
         self.nbsteps = nbsteps
 
     def init_policy(self, policy_dict):

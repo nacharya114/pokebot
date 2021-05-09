@@ -30,13 +30,18 @@ async def train(hparams, save_dir, server_config=None, wandb_on=True):
         import wandb
         wandb.init(project="pokebot")
         logger = wandb.log
+        wandb.config.update(hparams)
 
     if server_config is None:
-        server_config = LocalhostServerConfiguration
+        if hparams.server_configuration:
+            server_config = ServerConfiguration(**hparams.server_configuration)
+        else:
+            server_config = LocalhostServerConfiguration
     else:
         server_config = ServerConfiguration(server_config, 'authentication-endpoint.com/action.php?')
+    
+    
 
-    # wandb.config.update(hparams)
     p_dict = hparams.policy
     a_dict = hparams.agent
 
@@ -57,9 +62,9 @@ async def train(hparams, save_dir, server_config=None, wandb_on=True):
     model = m_clazz(player, **m_dict)
 
     train_lib = importlib.import_module('pokebot.trainers.trainer')
-    t_class = getattr(train_lib, hparams.trainer)
+    t_class: Trainer = getattr(train_lib, hparams.trainer)
     t_dict = hparams.trainer_params if hparams.trainer_params else {}
-    trainer = t_class(player, model, p_dict, a_dict, **t_dict)
+    trainer = t_class(player, model, p_dict, a_dict, server_configuration=server_config, **t_dict)
 
     await trainer.train(wandb_on=wandb_on)
 
@@ -72,15 +77,15 @@ async def train(hparams, save_dir, server_config=None, wandb_on=True):
     await trainer.evaluate(opponents, wandb_on=wandb_on)
 
     run_dir = os.path.join(os.path.abspath(save_dir), datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-    if not os.path.exists(run_dir):
-        os.makedirs(run_dir)
-    
-    fp = os.path.join(run_dir, "model.h5")
-    trainer.agent.save_weights(fp)
+    latest_dir = os.path.join(os.path.abspath(save_dir), "latest_run")
 
-    if os.path.exists(os.path.join(os.path.abspath(save_dir), "latest_run")):
-        os.makedirs(os.path.join(save_dir, "latest_run"), exist_ok=True)
-    trainer.agent.save_weights(os.path.join(save_dir, "latest_run", "model.h5"))
+    save_locs = [run_dir, latest_dir]
+
+    for fp in save_locs:
+        if not os.path.exists(fp):
+            os.makedirs(fp, exist_ok=True)
+        f = os.path.join(fp, "model.h5")
+        trainer.agent.save_weights(f)
 
 async def test(server_config):
     # We create three random players
@@ -126,7 +131,7 @@ if __name__ == '__main__':
 
     loop = asyncio.get_event_loop()
 
-    if len(sys.argv) == 4:
+    if "server_conf" in args.keys():
         server_conf = args["server_conf"]
         tasks.append(asyncio.Task(test(server_config = ServerConfiguration(server_conf, 'authentication-endpoint.com/action.php?'))))
 
