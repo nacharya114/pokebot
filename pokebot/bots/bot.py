@@ -25,6 +25,7 @@ class BotPlayer(EnvPlayer):
         *args,
         log_level: Optional[int] = None,
         server_configuration: Optional[ServerConfiguration] = None,
+        battle_format="gen8randombattle",
         team: Optional[Union[str, Teambuilder]] = None,
         state_engine: Optional[StateEngine] = None,
         **kwargs
@@ -55,7 +56,7 @@ class BotPlayer(EnvPlayer):
         super(BotPlayer, self).__init__(
             player_configuration=player_configuration,
             avatar=None,
-            battle_format="gen8randombattle",
+            battle_format=battle_format,
             log_level=log_level,
             server_configuration=server_configuration,
             start_listening=True,
